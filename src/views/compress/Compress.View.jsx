@@ -11,7 +11,7 @@ function CompressView() {
     const [file, setFile] = useState();
     const [compressionSize, setCompressionSize] = useState(1);
     const [crop, setCrop] = useState({})
-    const [isResizing, setIsResizing] = useState(false);
+    const [isCompressing, setIsCompressing] = useState(false);
 
     useEffect(() => {
         // clone imgurl
@@ -23,7 +23,7 @@ function CompressView() {
 
     useEffect(() => {
         if (!file || !compressionSize) return
-        setIsResizing(true);
+        setIsCompressing(true);
         const { promise, cancel } = makeCancellablePromise(compressImage(file, { maxSizeMB: compressionSize, initialQuality: 0.9 }));
         promise
             .then(async (compressedFile) => {
@@ -34,7 +34,7 @@ function CompressView() {
                 alert(err.message);
             })
             .finally(() => {
-                setIsResizing(false);
+                setIsCompressing(false);
             });
 
         return () => {
@@ -63,7 +63,7 @@ function CompressView() {
                 <input type='number' min={0.1} step={0.1} defaultValue={compressionSize} onChange={handleCompressSizeChange} id='compressed-image-size' />
             </div>
             <div>
-                {isResizing && <div>Resizing...</div>}
+                {isCompressing && <div>Compressing...</div>}
                 {imgUrl && <ReactCrop src={imgUrl} crop={crop} onChange={(crop) => setCrop(crop)} alt='compressed' />}
                 {/* image download link */}
                 {imgUrl && <a href={imgUrl} download={file.name} >Download</a>}
