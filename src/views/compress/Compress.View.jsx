@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import makeCancellablePromise from "make-cancellable-promise";
 import lodash from "lodash";
 // import ReactCrop from "react-image-crop";
@@ -17,6 +17,7 @@ import {
   CompressionSizeInput,
   DoneButton,
 } from "./components/menus/compressionMenu/CompressionMenu.component";
+import { ImageContext } from "../../contexts/image.context";
 // import { useDropzone } from 'react-dropzone';
 
 const TOOLBAR_OPTION = {
@@ -34,13 +35,17 @@ function CompressView() {
   // const { acceptedFiles, getRootProps, getInputProps } = useDropzone({accept: 'image/*'});
   const { undo, redo, canRedo, canUndo, push, flush } = useUndoRedo();
   const [imgUrl, setImgUrl] = useState("");
-  const [originalFile, setOriginalFile] = useState();
+  const [originalFile, setOriginalFile] = useContext(ImageContext);
   const [modifiedFile, setModifiedFile] = useState();
   const [config, setConfig] = useState(defaultConfig);
   const [isProcessing, setIsProcessing] = useState(false);
   const fileSelectorRef = useRef();
   const [fileBeforeManipulation, setFileBeforeManipulation] = useState();
   const [currentMenu, setCurrentMenu] = useState(TOOLBAR_OPTION.mainMenu);
+
+  useEffect(() => {
+    setModifiedFile(originalFile);
+  }, [originalFile]);
 
   useEffect(() => {
     if (!modifiedFile) return;
