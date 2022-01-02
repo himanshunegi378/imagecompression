@@ -1,4 +1,6 @@
 import styles from "./compressionMenu.module.css";
+import tickIcon from "./tick.png";
+import crossIcon from "./cross.png";
 
 export function CompressionMenu({ inputButton, doneButton, cancelButton }) {
   return (
@@ -6,6 +8,7 @@ export function CompressionMenu({ inputButton, doneButton, cancelButton }) {
       <div
         style={{
           marginRight: "50px",
+          display: "flex",
         }}
       >
         <label
@@ -14,9 +17,21 @@ export function CompressionMenu({ inputButton, doneButton, cancelButton }) {
             paddingRight: "12px",
           }}
         >
-          Compress to(Mb)
+          Compress to:
         </label>
-        {inputButton}
+        <span
+          style={{
+            paddingRight: "3px",
+            backgroundColor: "blue",
+            borderRadius: "3px",
+            color: "white",
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          {inputButton}
+          Mb
+        </span>
       </div>
       <div className={styles.buttonContainer}>
         {doneButton}
@@ -45,7 +60,7 @@ export function DoneButton({ className, ...props }) {
       {...props}
       className={`${styles.button} ${className}`}
     >
-      Done
+      <img src={tickIcon} className={styles.image} alt="" />
     </button>
   );
 }
@@ -58,7 +73,7 @@ export function CancelButton({ className, ...props }) {
       {...props}
       className={`${styles.button} ${className}`}
     >
-      Cancel
+      <img src={crossIcon} className={styles.image} alt="" />
     </button>
   );
 }

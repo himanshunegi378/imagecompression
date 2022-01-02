@@ -148,6 +148,7 @@ function CompressView() {
           }
           doneButton={
             <DoneButton
+              disabled={isProcessing}
               onClick={() => {
                 push(modifiedFile);
                 setFileBeforeManipulation(undefined);
@@ -157,6 +158,7 @@ function CompressView() {
           }
           cancelButton={
             <CancelButton
+              disabled={isProcessing}
               onClick={() => {
                 setModifiedFile(fileBeforeManipulation);
                 setFileBeforeManipulation(undefined);

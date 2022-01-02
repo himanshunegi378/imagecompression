@@ -12,10 +12,19 @@
 .buttonContainer {
   display: flex;
   gap: 12px;
+  height: 100%;
+  margin-left: auto;
 }
 
 .input {
   width: 45px;
+  appearance: none;
+  border: none;
+  margin-right: 3px;
+  border: 1px solid black;
+  border-right: 0;
+  border-radius: 3px 0 0 3px;
+  padding: 2px 3px;
 }
 
 .done {
@@ -28,6 +37,8 @@
   display: flex;
   height: 100%;
   cursor: pointer;
+  background: transparent;
+  border: none;
   padding: 2px 5px;
 }
 
