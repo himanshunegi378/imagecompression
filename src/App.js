@@ -1,17 +1,13 @@
-import { Routes, Route } from 'react-router-dom'
-import CompressView from './views/compress/Compress.View';
-import { HomeView } from './views/home/Home.view';
-import { ResizeView } from './views/resize/Resize.View';
+import { Routes, Route } from "react-router-dom";
+import { HomeView } from "./views/home/Home.view";
+import { WorkBenchView } from "./views/workBench/WorkBench.view";
 
 function App() {
-
-
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<HomeView />} />
-        <Route path="/compress" element={<CompressView />} />
-        <Route path="/resize" element={<ResizeView />} />
+        <Route path="/workbench" element={<WorkBenchView />} />
       </Routes>
     </div>
   );

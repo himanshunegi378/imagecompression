@@ -8,7 +8,7 @@ export function HomeView() {
   const navigate = useNavigate();
   const handleUploadeFile = (file) => {
     setImageFile(file[0]);
-    navigate("/compress");
+    navigate("/workbench");
   };
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({

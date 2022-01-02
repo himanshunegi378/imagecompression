@@ -1,0 +1,31 @@
+.layout {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-areas:
+    "header header header"
+    "main main sidebar"
+    "toolbar toolbar sidebar";
+  /* sidebar max width 300px */
+  grid-template-columns: 1fr 1fr minmax(300px, 0);
+}
+
+.header {
+  grid-area: header;
+  height: 50px;
+}
+
+.main {
+  grid-area: main;
+  height: calc(100vh - 100px);
+}
+
+.sidebar {
+  grid-area: sidebar;
+  height: calc(100vh - 100px);
+}
+
+.toolbar {
+  grid-area: toolbar;
+  height: 50px;
+}
