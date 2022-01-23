@@ -3,6 +3,8 @@ import { useDropzone } from "react-dropzone";
 import { useContext } from "react";
 import { actionType, ImageContext } from "../../contexts/image.context";
 import { RequirementsInputForm } from "./components/requirementsInputForm/RequirementsInputForm";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faImage } from "@fortawesome/free-solid-svg-icons";
 
 export function HomeView() {
   const { dispatch } = useContext(ImageContext);
@@ -25,28 +27,38 @@ export function HomeView() {
         <Route
           path="/config"
           element={
-            <RequirementsInputForm
-              onChange={(config) => {
-                dispatch({ type: actionType.config, payload: { config } });
-                navigate("/workbench");
-              }}
-            />
+            <div
+              className={`container flex justify-center items-center h-screen mx-auto`}
+            >
+              <RequirementsInputForm
+                onChange={(config) => {
+                  dispatch({ type: actionType.config, payload: { config } });
+                  navigate("/workbench");
+                }}
+              />
+            </div>
           }
         />
         <Route
           path="/"
           element={
-            <div className={`container flex justify-center items-center h-screen`}>
+            <div
+              className={`container flex justify-center items-center h-screen mx-auto`}
+            >
               <div
                 {...getRootProps({
-                  className: `max-w-md border-4 border-dashed border-blue-400 hover:border-blue-500 p-4 rounded-lg cursor-pointer flex justify-center items-center`,
+                  className: `w-96 h-40 max-w-full border-4 border-dashed border-blue-400 hover:border-blue-500
+                    p-4 rounded-lg cursor-pointer flex justify-center items-center
+                    ${isDragActive ? "border-blue-500" : ""}`,
                 })}
               >
                 <input {...getInputProps()} />
                 {isDragActive ? (
-                  <p>Drop the image here ...</p>
+                  <p>
+                    <FontAwesomeIcon icon={faImage} /> Drop the image here ...
+                  </p>
                 ) : (
-                  <p>Drag 'n' drop some image here, or click to select image</p>
+                  <p><FontAwesomeIcon icon={faImage} /> Drag 'n' drop some image here, or click to select image</p>
                 )}
               </div>
             </div>

@@ -5,6 +5,10 @@ import { Layout } from "./components/Layout/Layout.component";
 import "react-image-crop/dist/ReactCrop.css";
 import ReactCrop from "react-image-crop";
 import convertImage from "image-file-resize";
+import { unitToPixel } from "../../utils/unitToPixel";
+import { downloadFile } from "../../utils/downloadFile";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDownload } from "@fortawesome/free-solid-svg-icons";
 
 export const WorkBenchView = () => {
   const { state } = useContext(ImageContext);
@@ -43,8 +47,14 @@ export const WorkBenchView = () => {
           });
           convertImage({
             file: imageFile,
-            width: state.config.dimension.w,
-            height: state.config.dimension.h,
+            width: unitToPixel(
+              state.config.dimension.w,
+              state.config.dimension.unit
+            ),
+            height: unitToPixel(
+              state.config.dimension.h,
+              state.config.dimension.unit
+            ),
             type: imageFile.type.split("/")[1],
           })
             .then((resizedImage) => {
@@ -68,6 +78,18 @@ export const WorkBenchView = () => {
           <ImagePreviewContainer.Image src={imagePreviewUrl} alt="preivew" />
         </ImagePreviewContainer>
       }
+      sidebar={
+        <div className="p-4">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 active:bg-red-400 text-white font-bold py-2 px-4 rounded-md w-full"
+            onClick={() => {
+              downloadFile(modifiedFile);
+            }}
+          >
+            Download <FontAwesomeIcon className="ml-1" icon={faDownload} />
+          </button>
+        </div>
+      }
     />
   );
 };
@@ -78,6 +100,11 @@ const CropView = ({ imageUrl, onImageCropped, initialCropConfig }) => {
   const imageToCropRef = useRef(null);
   return (
     <Layout
+      header={
+        <div className="flex justify-center items-center shadow-md h-full">
+          <h1 className="text-2xl font-bold">Crop Image</h1>
+        </div>
+      }
       main={
         <ImagePreviewContainer>
           {imageUrl && (
@@ -93,19 +120,22 @@ const CropView = ({ imageUrl, onImageCropped, initialCropConfig }) => {
         </ImagePreviewContainer>
       }
       sidebar={
-        <button
-          disabled={isProcessing}
-          onClick={() => {
-            setIsProcessing(true);
-            getCroppedImgBlob(imageToCropRef.current, crop).then(
-              (croppedImageBlob) => {
-                onImageCropped(croppedImageBlob);
-              }
-            );
-          }}
-        >
-          Done
-        </button>
+        <div className="p-4">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 active:bg-red-400 text-white font-bold py-2 px-4 rounded-md w-full"
+            disabled={isProcessing}
+            onClick={() => {
+              setIsProcessing(true);
+              getCroppedImgBlob(imageToCropRef.current, crop).then(
+                (croppedImageBlob) => {
+                  onImageCropped(croppedImageBlob);
+                }
+              );
+            }}
+          >
+            Done
+          </button>
+        </div>
       }
     />
   );
