@@ -36,13 +36,19 @@ export function HomeView() {
         <Route
           path="/"
           element={
-            <div {...getRootProps()}>
-              <input {...getInputProps()} />
-              {isDragActive ? (
-                <p>Drop the image here ...</p>
-              ) : (
-                <p>Drag 'n' drop some image here, or click to select image</p>
-              )}
+            <div className={`container flex justify-center items-center h-screen`}>
+              <div
+                {...getRootProps({
+                  className: `max-w-md border-4 border-dashed border-blue-400 hover:border-blue-500 p-4 rounded-lg cursor-pointer flex justify-center items-center`,
+                })}
+              >
+                <input {...getInputProps()} />
+                {isDragActive ? (
+                  <p>Drop the image here ...</p>
+                ) : (
+                  <p>Drag 'n' drop some image here, or click to select image</p>
+                )}
+              </div>
             </div>
           }
         />
