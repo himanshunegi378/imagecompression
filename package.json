@@ -7,6 +7,8 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "browser-image-compression": "^1.0.17",
+    "compute-gcd": "^1.2.1",
+    "image-file-resize": "^1.0.4",
     "lodash": "^4.17.21",
     "make-cancellable-promise": "^1.1.0",
     "react": "^17.0.2",

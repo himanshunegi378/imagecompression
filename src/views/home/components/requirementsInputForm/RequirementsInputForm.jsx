@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { unitToPixel } from "../../../../utils/unitToPixel";
 
 const factoryConfig = {
   dimension: {
@@ -17,13 +18,22 @@ export function RequirementsInputForm({
 
   const requestConfigChange = (updatedConfig) => {
     if (isDisabled) return;
+
     setConfig(updatedConfig);
   };
 
   const handlSubmit = (e) => {
     e.preventDefault();
     if (isDisabled) return;
-    onChange(config);
+    // change w,h form cm to pixel
+
+    onChange({
+      ...config,
+      dimension: {
+        w: unitToPixel(config.dimension.w, "in"),
+        h: unitToPixel(config.dimension.h, "in"),
+      },
+    });
   };
 
   return (

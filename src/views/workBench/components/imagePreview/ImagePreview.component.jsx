@@ -28,6 +28,7 @@ ImagePreviewContainer.Image = function ({ style, ...props }) {
         margin: "auto",
         ...style,
       }}
+      alt=''
       {...props}
     />
   );
