@@ -2,6 +2,7 @@ import { useState } from "react";
 
 const factoryConfig = {
   dimension: {
+    unit:'px',
     w: 1,
     h: 1,
   },
@@ -9,11 +10,14 @@ const factoryConfig = {
 };
 
 export function RequirementsInputForm({
-  defaultConfig,
+  defaultConfig = {},
   onChange,
   isDisabled = false,
 }) {
-  const [config, setConfig] = useState(defaultConfig || factoryConfig);
+  const [config, setConfig] = useState({
+    ...factoryConfig,
+    ...defaultConfig,
+  });
 
   const requestConfigChange = (updatedConfig) => {
     if (isDisabled) return;
@@ -24,13 +28,15 @@ export function RequirementsInputForm({
   const handlSubmit = (e) => {
     e.preventDefault();
     if (isDisabled) return;
-    // change w,h form cm to pixel
 
     onChange(config);
   };
 
   return (
-    <form className="border-2 p-4 rounded-md shadow-md shadow-rose-300" onSubmit={handlSubmit}>
+    <form
+      className="border-2 p-4 rounded-md shadow-md shadow-rose-300"
+      onSubmit={handlSubmit}
+    >
       <h3 className="text-xl font-bold mb-4">Dimension</h3>
       <div className="grid grid-cols-2 gap-4">
         <div className="col-span-2">
@@ -49,7 +55,6 @@ export function RequirementsInputForm({
                 });
               }}
             >
-              <option value="">Select a unit</option>
               <option value="in">Inch</option>
               <option value="cm">Centimeter</option>
               <option value="mm">millimeter</option>
@@ -66,7 +71,7 @@ export function RequirementsInputForm({
             type="number"
             required
             min={0}
-            step={1}
+            step={0.01}
             value={config.dimension.w}
             onChange={(e) =>
               requestConfigChange({

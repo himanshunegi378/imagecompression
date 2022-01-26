@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect, useRef } from "react";
+import { useState, useContext, useRef } from "react";
 import { ImageContext } from "../../contexts/image.context";
 import { ImagePreviewContainer } from "./components/imagePreview/ImagePreview.component";
 import { Layout } from "./components/Layout/Layout.component";
@@ -8,29 +8,34 @@ import convertImage from "image-file-resize";
 import { unitToPixel } from "../../utils/unitToPixel";
 import { downloadFile } from "../../utils/downloadFile";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faDownload } from "@fortawesome/free-solid-svg-icons";
+import { faDownload, faCrop, faUndo } from "@fortawesome/free-solid-svg-icons";
+import { useStateEffect } from "../../hooks/useStateEffect";
 
 export const WorkBenchView = () => {
   const { state } = useContext(ImageContext);
-  const [modifiedFile, setModifiedFile] = useState(state.file);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState("");
+  const [modifiedFile, setModifiedFile] = useStateEffect(
+    (_state, set) => {
+      set(state.file);
+    },
+    [state.file],
+    state.file
+  );
+  const [imagePreviewUrl] = useStateEffect(
+    (state, set) => {
+      if (modifiedFile) {
+        const url = URL.createObjectURL(modifiedFile);
+        set(url);
+        return () => {
+          URL.revokeObjectURL(url);
+        };
+      } else {
+        alert("Image is not supported");
+      }
+    },
+    [modifiedFile],
+    ""
+  );
   const [viewState, setViewState] = useState("crop");
-
-  useEffect(() => {
-    setModifiedFile(state.file);
-  }, [state.file]);
-
-  useEffect(() => {
-    if (modifiedFile) {
-      const url = URL.createObjectURL(modifiedFile);
-      setImagePreviewUrl(url);
-      return () => {
-        URL.revokeObjectURL(url);
-      };
-    } else {
-      alert("Image is not supported");
-    }
-  }, [modifiedFile]);
 
   if (viewState === "crop") {
     return (
@@ -41,31 +46,29 @@ export const WorkBenchView = () => {
           width: 100,
           aspect: state.config.dimension.w / state.config.dimension.h,
         }}
-        onImageCropped={(croppedImageBlob) => {
-          const imageFile = new File([croppedImageBlob], modifiedFile.name, {
-            type: modifiedFile.type,
-          });
-          convertImage({
-            file: imageFile,
-            width: unitToPixel(
-              state.config.dimension.w,
-              state.config.dimension.unit
-            ),
-            height: unitToPixel(
-              state.config.dimension.h,
-              state.config.dimension.unit
-            ),
-            type: imageFile.type.split("/")[1],
-          })
-            .then((resizedImage) => {
-              console.log(resizedImage);
-              setModifiedFile(resizedImage);
-              setViewState("");
-            })
-            .catch((err) => {
-              console.log(`Error while resizing image ${err}`);
-              console.log(err.stack);
+        onImageCropped={async (croppedImageBlob) => {
+          try {
+            const imageFile = new File([croppedImageBlob], modifiedFile.name, {
+              type: modifiedFile.type,
             });
+            const resizedImage = await convertImage({
+              file: imageFile,
+              width: unitToPixel(
+                state.config.dimension.w,
+                state.config.dimension.unit
+              ),
+              height: unitToPixel(
+                state.config.dimension.h,
+                state.config.dimension.unit
+              ),
+              type: imageFile.type.split("/")[1],
+            });
+            setModifiedFile(resizedImage);
+            setViewState("");
+          } catch (err) {
+            console.log(`Error while resizing image ${err}`);
+            console.log(err.stack);
+          }
         }}
       />
     );
@@ -73,6 +76,11 @@ export const WorkBenchView = () => {
 
   return (
     <Layout
+      header={
+        <div className="flex justify-center items-center shadow-md h-full">
+          <h1 className="text-2xl font-bold">Crop Image</h1>
+        </div>
+      }
       main={
         <ImagePreviewContainer>
           <ImagePreviewContainer.Image src={imagePreviewUrl} alt="preivew" />
@@ -80,14 +88,34 @@ export const WorkBenchView = () => {
       }
       sidebar={
         <div className="p-4">
-          <button
-            className="bg-blue-500 hover:bg-blue-700 active:bg-red-400 text-white font-bold py-2 px-4 rounded-md w-full"
-            onClick={() => {
-              downloadFile(modifiedFile);
-            }}
-          >
-            Download <FontAwesomeIcon className="ml-1" icon={faDownload} />
-          </button>
+          <div className="grid grid-cols-2 gap-1">
+            <button
+              className="bg-blue-500 hover:bg-blue-700 active:bg-red-400 text-white font-bold py-2 px-4 rounded-md w-full"
+              onClick={() => {
+                setViewState("crop");
+              }}
+            >
+              Crop <FontAwesomeIcon className="ml-1" icon={faCrop} />
+            </button>
+            <button
+              className="bg-blue-500 hover:bg-blue-700 active:bg-red-400 text-white font-bold py-2 px-4 rounded-md w-full"
+              onClick={() => {
+                setModifiedFile(state.file);
+              }}
+            >
+              Reset <FontAwesomeIcon className="ml-1" icon={faUndo} />
+            </button>
+            <div className="col-span-2">
+              <button
+                className="bg-green-500 hover:bg-green-700 active:bg-red-400 text-white font-bold py-2 px-4 rounded-md w-full"
+                onClick={() => {
+                  downloadFile(modifiedFile);
+                }}
+              >
+                Download <FontAwesomeIcon className="ml-1" icon={faDownload} />
+              </button>
+            </div>
+          </div>
         </div>
       }
     />

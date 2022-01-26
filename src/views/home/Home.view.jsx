@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faImage } from "@fortawesome/free-solid-svg-icons";
 
 export function HomeView() {
-  const { dispatch } = useContext(ImageContext);
+  const { state, dispatch } = useContext(ImageContext);
   const navigate = useNavigate();
   const handleUploadeFile = (file) => {
     if (file.length !== 1) return;
@@ -35,6 +35,9 @@ export function HomeView() {
                   dispatch({ type: actionType.config, payload: { config } });
                   navigate("/workbench");
                 }}
+                defaultConfig={{
+                  size: state.file && Number(state.file.size / 1048576).toFixed(2),
+                }}
               />
             </div>
           }
@@ -58,7 +61,10 @@ export function HomeView() {
                     <FontAwesomeIcon icon={faImage} /> Drop the image here ...
                   </p>
                 ) : (
-                  <p><FontAwesomeIcon icon={faImage} /> Drag 'n' drop some image here, or click to select image</p>
+                  <p>
+                    <FontAwesomeIcon icon={faImage} /> Drag 'n' drop some image
+                    here, or click to select image
+                  </p>
                 )}
               </div>
             </div>
