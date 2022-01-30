@@ -58,11 +58,11 @@ export function HomeView() {
               >
                 <input {...getInputProps()} />
                 {isDragActive ? (
-                  <p>
+                  <p className="text-center text-blue-500 text-lg font-bold">
                     <FontAwesomeIcon icon={faImage} /> Drop the image here ...
                   </p>
                 ) : (
-                  <p>
+                  <p className="text-center text-blue-500 text-lg font-bold">
                     <FontAwesomeIcon icon={faImage} /> Drag 'n' drop some image
                     here, or click to select image
                   </p>
