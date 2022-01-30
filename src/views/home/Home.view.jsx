@@ -36,7 +36,8 @@ export function HomeView() {
                   navigate("/workbench");
                 }}
                 defaultConfig={{
-                  size: state.file && Number(state.file.size / 1048576).toFixed(2),
+                  size: state.file && Number(state.file.size),
+                  sizeUnit: "B",
                 }}
               />
             </div>
