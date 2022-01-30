@@ -7,9 +7,13 @@ export const actionType = {
 const initialState = {
   file: null,
   config: {
-    width: 0,
-    height: 0,
-    size: 20,
+    dimension: {
+      unit: "cm",
+      w: 1,
+      h: 1,
+    },
+    size: 1,
+    sizeUnit: "MB",
   },
 };
 const reducer = (state = initialState, action) => {
@@ -33,14 +37,13 @@ const reducer = (state = initialState, action) => {
   }
 };
 
-
 export const ImageContext = createContext({});
 
 export const ImageProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <ImageContext.Provider value={{state, dispatch}}>
+    <ImageContext.Provider value={{ state, dispatch }}>
       {children}
     </ImageContext.Provider>
   );
